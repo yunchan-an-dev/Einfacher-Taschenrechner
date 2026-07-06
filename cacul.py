@@ -40,52 +40,57 @@ class Calculator:
                 height=2,
                 command=lambda t=text: self.on_number_click(t)
         )
-        button.pack()
+        button.grid(row=row, column=col, padx=5, pady=5)
 
-    def on_number_click(self, value):
-        if self.result is not None:
-            self.display_text.set(value)
-            self.result = None
+    def on_number_click(value):
+        if value in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."]:
+            self.display_text.set(self.display_text.get() + value)
+            
         else:
-            current = self.display_text.get()
-            if current == "0":
-                self.display_text.set(value)
-            else:
-                self.display_text.set(current + value)
+            self.display_text.set(value)
+          
 
-    def on_operator_click(self, operator):
-        if operator in ["+", "-", "*", "/"]:
-            self.display_text += f" {operator} "
+    def on_operator_click(op):
+        if op in ["+", "-", "*", "/"]:
+            self.display_text.set(self.display_text.get() + f" {op} ")
             self.update_display()
 
-    def on_equals_click(self):
+    def on_equals_click(equals):
         if equals in ["="]:
-            eval self.display_text.get()
-            show result = eval(self.display_text.get())
-            result = eval(self.display_text.get())
-
-    def on_sqrt_click(self):
+            try:
+                expression = self.display_text.get()
+                result = eval(expression)
+                self.display_text.set(str(result))
+            except Exception as e:
+                self.display_text.set("Error")
+            
+    def on_sqrt_click(sqrt):
         if sqrt in ["√"]:
             result = sqrt(float(self.display_text.get()))
-            self.display_text = str(result)
+            sqrt.display_text.set(str(result))
+            sqrt.update_display()
+
+    def on_square_click(square):
+        if square in ["x^2"]:
+            result = float(square.display_text.get()) ** 2
+            square.display_text.set(str(result))
+            square.update_display()
+
+    def on_clear_click(c):
+        if c in ["C"]:
+            self.display_text.set("")
             self.update_display()
 
-    def on_square_click(self):
-        if "x^2" in ["x^2"]:
-            result = float(self.display_text.get()) ** 2
-            self.display_text = str(result)
-            self.update_display()
-
-    def on_clear_click(self):
-        if "C" in ["C"]:
-            self.display_text = ""
-            self.update_display()
-
-    def on_backspace_click(self):
-        if "←" in ["←"]:
-            current = self.display_text.get()
-            self.display_text.set(current[:-1])
-            self.update_display()
+    def on_backspace_click(back):
+        if back in ["←"]:
+            current = back.display_text.get()
+            back.display_text.set(current[:-1])
+            back.update_display()
 
     def update_display(self):
         self.display.config(text=self.display_text.get())
+
+#----------------main
+if __name__ == "__main__":
+    calculator = Calculator()
+    calculator.window.mainloop()
